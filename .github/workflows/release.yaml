@@ -20,6 +20,10 @@ on:
 env:
   GODOT_VERSION: "4.4.1"
   GODOT_STATUS: "stable"
+  LINUX_ARTIFACT: "LinuxX11"
+  WEB_ARTIFACT: "HTML5"
+  WINDOWS_ARTIFACT: "Windows"
+  MACOS_ARTIFACT: "macOS"
 
 jobs:
   import-assets:
@@ -58,68 +62,53 @@ jobs:
           echo ${{format('{0}/HTML5.zip', steps.export.outputs.archive_directory)}}
           ls ${{steps.export.outputs.archive_directory}}
           echo ${{hashFiles(format('{0}/HTML5.zip', steps.export.outputs.archive_directory))}}
-          echo ${{hashFiles('/home/runner/.local/share/godot/archives/HTML5.zip')}}
+          echo $GITHUB_WORKSPACE
       - name: Upload HTML5
-        # if: ${{hashFiles(format('{0}/HTML5.zip', steps.export.outputs.archive_directory)) != ''}}
         if: ${{hashFiles('/home/runner/.local/share/godot/archives/HTML5.zip') != ''}}
         uses: actions/upload-artifact@v4
         with:
-          name: HTML5
+          name: ${{env.WEB_ARTIFACT}}
           path: /home/runner/.local/share/godot/archives/HTML5.zip
       # - name: Upload Linux
       #   if: ${{vars.DEPLOY_LINUX != 'false'}}
       #   uses: actions/upload-artifact@v4
       #   with:
-      #     name: LinuxX11
+      #     name: ${{env.LINUX_ARTIFACT}}
       #     path: /home/runner/.local/share/godot/archives/LinuxX11.zip
       # - name: Upload Windows
       #   if: ${{vars.DEPLOY_WINDOWS != 'false'}}
       #   uses: actions/upload-artifact@v4
       #   with:
-      #     name: Windows
+      #     name: ${{env.WINDOWS_ARTIFACT}}
       #     path: /home/runner/.local/share/godot/archives/Windows.zip
       # - name: Upload MacOS
       #   if: ${{vars.DEPLOY_MACOS != 'false'}}
       #   uses: actions/upload-artifact@v4
       #   with:
-      #     name: macOS
+      #     name: ${{env.MACOS_ARTIFACT}}
       #     path: /home/runner/.local/share/godot/archives/macOS.zip
 
-  # deploy-to-itchio-linux:
-  #   if: ${{vars.DEPLOY_LINUX != 'false'}}
-  #   runs-on: ubuntu-latest
-  #   needs: export-game
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: LinuxX11
-  #     - name: Deploy to Itch.io (Linux)
-  #       uses: manleydev/butler-publish-itchio-action@master
-  #       env:
-  #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
-  #         CHANNEL: linux
-  #         ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
-  #         ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
-  #         PACKAGE: LinuxX11.zip
+  should-deploy-linux:
+    runs-on: ubuntu-latest
+    needs: export-game
+    outputs:
+      do-export: ${{steps.artifact-exists.outputs.exists}}
+    steps:
+      - uses: LIT-Protocol/artifact-exists-action@v0
+        id: artifact-exists
+        with:
+          name: ${{env.LINUX_ARTIFACT}}
 
-  # deploy-to-itchio-windows:
-  #   if: ${{vars.DEPLOY_WINDOWS != 'false'}}
-  #   runs-on: ubuntu-latest
-  #   needs: export-game
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: Windows
-  #     - name: Deploy to Itch.io (Windows)
-  #       uses: manleydev/butler-publish-itchio-action@master
-  #       env:
-  #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
-  #         CHANNEL: windows
-  #         ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
-  #         ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
-  #         PACKAGE: Windows.zip
+  should-deploy-windows:
+    runs-on: ubuntu-latest
+    needs: export-game
+    outputs:
+      do-export: ${{steps.artifact-exists.outputs.exists}}
+    steps:
+      - uses: LIT-Protocol/artifact-exists-action@v0
+        id: artifact-exists
+        with:
+          name: ${{env.WINDOWS_ARTIFACT}}
 
   should-deploy-mac:
     runs-on: ubuntu-latest
@@ -130,8 +119,54 @@ jobs:
       - uses: LIT-Protocol/artifact-exists-action@v0
         id: artifact-exists
         with:
-          name: macOS
-      - run: echo ${{steps.artifact-exists.outputs.exists}}
+          name: ${{env.MACOS_ARTIFACT}}
+
+  should-deploy-web:
+    runs-on: ubuntu-latest
+    needs: export-game
+    outputs:
+      do-export: ${{steps.artifact-exists.outputs.exists}}
+    steps:
+      - uses: LIT-Protocol/artifact-exists-action@v0
+        id: artifact-exists
+        with:
+          name: ${{env.WEB_ARTIFACT}}
+
+  deploy-to-itchio-linux:
+    runs-on: ubuntu-latest
+    needs: should-deploy-linux
+    if: ${{needs.should-deploy-linux.outputs.do-export == 'true'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{env.LINUX_ARTIFACT}}
+      - name: Deploy to Itch.io (Linux)
+        uses: manleydev/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          CHANNEL: linux
+          ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
+          ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
+          PACKAGE: LinuxX11.zip
+
+  deploy-to-itchio-windows:
+    runs-on: ubuntu-latest
+    needs: should-deploy-windows
+    if: ${{needs.should-deploy-windows.outputs.do-export == 'true'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{env.WINDOWS_ARTIFACT}}
+      - name: Deploy to Itch.io (Windows)
+        uses: manleydev/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          CHANNEL: windows
+          ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
+          ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
+          PACKAGE: Windows.zip
 
   deploy-to-itchio-mac:
     runs-on: ubuntu-latest
@@ -141,7 +176,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: macOS
+          name: ${{env.MACOS_ARTIFACT}}
       - name: Deploy to Itch.io (MacOS)
         uses: manleydev/butler-publish-itchio-action@master
         env:
@@ -151,20 +186,20 @@ jobs:
           ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
           PACKAGE: macOS.zip
 
-  # deploy-to-itchio-web:
-  #   if: ${{vars.DEPLOY_HTML5 != 'false'}}
-  #   runs-on: ubuntu-latest
-  #   needs: export-game
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: HTML5
-  #     - name: Deploy to Itch.io (HTML5)
-  #       uses: manleydev/butler-publish-itchio-action@master
-  #       env:
-  #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
-  #         CHANNEL: web
-  #         ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
-  #         ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
-  #         PACKAGE: HTML5.zip
+  deploy-to-itchio-web:
+    runs-on: ubuntu-latest
+    needs: should-deploy-web
+    if: ${{needs.should-deploy-web.outputs.do-export == 'true'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{env.WEB_ARTIFACT}}
+      - name: Deploy to Itch.io (HTML5)
+        uses: manleydev/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          CHANNEL: web
+          ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
+          ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
+          PACKAGE: HTML5.zip
