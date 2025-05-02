@@ -53,8 +53,11 @@ jobs:
           relative_project_path: "./project"
           archive_output: true
           cache: false
+      - name: Print Archive Directory
+        run: echo ${{steps.export.outputs.archive_directory}}
       - name: Upload HTML5
-        if: ${{hashFiles(format('{0}/HTML5.zip', steps.export.outputs.archive_directory)) != ''}}
+        # if: ${{hashFiles(format('{0}/HTML5.zip', steps.export.outputs.archive_directory)) != ''}}
+        if: ${{hashFiles('/home/runner/.local/share/godot/archives/HTML5.zip' != '')}}
         uses: actions/upload-artifact@v4
         with:
           name: HTML5
