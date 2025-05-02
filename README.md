@@ -2,6 +2,8 @@
 
 **Here is a simple template for getting up and running with Godot quickly**
 
+This is a simple Godot project that contains three basic screens; a main menu, an empty game scene, and a pause menu overlay. However the primary goal of this template is to accelerate the process of building and deploying the game to [itch.io](https://itch.io/).
+
 ## GitHub Actions
 
 This project is set up with a GitHub action that automatically builds and deploys to Web, Windows, MacOS, and Linux.
@@ -15,7 +17,7 @@ Right now the export configuration names are hardcoded to the following:
 > [!NOTE]
 > Any configuration with a name that does not match the above will still be built by the github action but will not be uploaded to itch.io
 
-In order to trigger the action you must push a tag of the format `v[0-9]+.[0-9]+.[0-9]+`. For example: v1.0.0 or v0.21.9, etc.
+In order to trigger the action you must push a tag of the format `v[0-9]+.[0-9]+.[0-9]+`. For example: v1.0.0 or v0.21.9, etc. You can also manually trigger the action on the workflow page.
 
 ### Itch.io Integration
 
