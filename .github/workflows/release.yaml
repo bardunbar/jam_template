@@ -58,13 +58,6 @@ jobs:
           archive_output: true
           cache: false
 
-          # - name: Print Archive Directory
-      #   run: |
-      #     echo ${{format('{0}/HTML5.zip', steps.export.outputs.archive_directory)}}
-      #     ls ${{steps.export.outputs.archive_directory}}
-      #     echo ${{hashFiles(format('{0}/HTML5.zip', steps.export.outputs.archive_directory))}}
-      #     echo $GITHUB_WORKSPACE
-
       - name: Check HTML5 Exists
         id: check-html5
         uses: andstor/file-existence-action@v3
