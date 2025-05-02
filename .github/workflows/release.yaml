@@ -57,36 +57,62 @@ jobs:
           relative_project_path: "./project"
           archive_output: true
           cache: false
-      - name: Print Archive Directory
-        run: |
-          echo ${{format('{0}/HTML5.zip', steps.export.outputs.archive_directory)}}
-          ls ${{steps.export.outputs.archive_directory}}
-          echo ${{hashFiles(format('{0}/HTML5.zip', steps.export.outputs.archive_directory))}}
-          echo $GITHUB_WORKSPACE
+
+          # - name: Print Archive Directory
+      #   run: |
+      #     echo ${{format('{0}/HTML5.zip', steps.export.outputs.archive_directory)}}
+      #     ls ${{steps.export.outputs.archive_directory}}
+      #     echo ${{hashFiles(format('{0}/HTML5.zip', steps.export.outputs.archive_directory))}}
+      #     echo $GITHUB_WORKSPACE
+
+      - name: Check HTML5 Exists
+        id: check-html5
+        uses: andstor/file-existence-action@v3
+        with:
+          files: ${{format('{0}/HTML5.zip', steps.export.outputs.archive_directory)}}
       - name: Upload HTML5
-        if: ${{hashFiles('/home/runner/.local/share/godot/archives/HTML5.zip') != ''}}
+        if: steps.check-html5.outputs.files_exists == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ${{env.WEB_ARTIFACT}}
           path: /home/runner/.local/share/godot/archives/HTML5.zip
-      # - name: Upload Linux
-      #   if: ${{vars.DEPLOY_LINUX != 'false'}}
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{env.LINUX_ARTIFACT}}
-      #     path: /home/runner/.local/share/godot/archives/LinuxX11.zip
-      # - name: Upload Windows
-      #   if: ${{vars.DEPLOY_WINDOWS != 'false'}}
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{env.WINDOWS_ARTIFACT}}
-      #     path: /home/runner/.local/share/godot/archives/Windows.zip
-      # - name: Upload MacOS
-      #   if: ${{vars.DEPLOY_MACOS != 'false'}}
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{env.MACOS_ARTIFACT}}
-      #     path: /home/runner/.local/share/godot/archives/macOS.zip
+
+      - name: Check Linux Exists
+        id: check-linux
+        uses: andstor/file-existence-action@v3
+        with:
+          files: ${{format('{0}/LinuxX11.zip', steps.export.outputs.archive_directory)}}
+      - name: Upload Linux
+        if: steps.check-linux.outputs.files_exists == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.LINUX_ARTIFACT}}
+          path: /home/runner/.local/share/godot/archives/LinuxX11.zip
+
+      - name: Check Windows Exists
+        id: check-windows
+        uses: andstor/file-existence-action@v3
+        with:
+          files: ${{format('{0}/Windows.zip', steps.export.outputs.archive_directory)}}
+      - name: Upload Windows
+        if: steps.check-windows.outputs.files_exists == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.WINDOWS_ARTIFACT}}
+          path: /home/runner/.local/share/godot/archives/Windows.zip
+
+      - name: Check MacOS Exists
+        id: check-macos
+        uses: andstor/file-existence-action@v3
+        with:
+          files: ${{format('{0}/macOS.zip', steps.export.outputs.archive_directory)}}
+      - name: Upload MacOS
+        if: steps.check-macos.outputs.files_exists == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.MACOS_ARTIFACT}}
+          path: /home/runner/.local/share/godot/archives/macOS.zip
+
 
   should-deploy-linux:
     runs-on: ubuntu-latest
