@@ -1,5 +1,7 @@
 extends Control
 
+@export_file("*.tscn", "*.scn") var main_menu_path : String
+
 @onready var resume_button: Button = %ResumeButton
 @onready var main_menu_button: Button = %MainMenuButton
 @onready var quit_button: Button = %QuitButton
@@ -16,7 +18,7 @@ func _on_resume_button_pressed() -> void:
 	
 func _on_main_menu_button_pressed() -> void:
 	# Temp until I can figure out this flow properly
-	get_tree().change_scene_to_file("res://screens/main_menu/main_menu_scene.tscn")
+	get_tree().change_scene_to_file(main_menu_path)
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()

@@ -1,12 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://cg2pqihw6wjud"]
+[gd_scene load_steps=3 format=3 uid="uid://cg2pqihw6wjud"]
 
 [ext_resource type="Script" uid="uid://uo5g3ojn10ra" path="res://screens/main_menu/main_menu_script.gd" id="1_givtq"]
 [ext_resource type="Texture2D" uid="uid://ch2c0uus03qn6" path="res://assets/textures/godot_logo.png" id="1_lgj5r"]
-[ext_resource type="PackedScene" uid="uid://cfnef885bvt5u" path="res://screens/game/game_scene.tscn" id="2_6iutv"]
 
 [node name="MainMenuScene" type="Node2D"]
 script = ExtResource("1_givtq")
-game_scene = ExtResource("2_6iutv")
+game_scene_path = "uid://cfnef885bvt5u"
 
 [node name="MenuUI" type="CanvasLayer" parent="."]
 
