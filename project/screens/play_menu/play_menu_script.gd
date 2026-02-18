@@ -7,13 +7,16 @@ extends Control
 @onready var quit_button: Button = %QuitButton
 
 func _ready() -> void:
+	get_tree().paused = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	resume_button.grab_focus()
-	
 	resume_button.pressed.connect(_on_resume_button_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_button_pressed)
 	quit_button.pressed.connect(_on_quit_button_pressed)
 	
 func _on_resume_button_pressed() -> void:
+	get_tree().paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	queue_free()
 	
 func _on_main_menu_button_pressed() -> void:

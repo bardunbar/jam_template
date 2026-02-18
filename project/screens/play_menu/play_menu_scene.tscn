@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4oy6yui5ffhj"]
+[gd_scene format=3 uid="uid://c4oy6yui5ffhj"]
 
 [ext_resource type="Script" uid="uid://upcj28bpj8b1" path="res://screens/play_menu/play_menu_script.gd" id="1_in4hb"]
 
-[node name="PlayMenuScene" type="Control"]
+[node name="PlayMenuScene" type="Control" unique_id=2024076237]
+process_mode = 2
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +13,7 @@ grow_vertical = 2
 script = ExtResource("1_in4hb")
 main_menu_path = "uid://cg2pqihw6wjud"
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2093946457]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +22,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.211765)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=698150679]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,27 +30,27 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1321949116]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer" unique_id=340970165]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Paused"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ResumeButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1928087621]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Resume"
 
-[node name="MainMenuButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="MainMenuButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=2145751679]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Main Menu"
 
-[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1644509075]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Quit"

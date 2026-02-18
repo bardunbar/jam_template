@@ -1,20 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://cfnef885bvt5u"]
+[gd_scene format=3 uid="uid://cfnef885bvt5u"]
 
 [ext_resource type="Script" uid="uid://cqdnoi24guymt" path="res://screens/game/game_script.gd" id="1_e6mtp"]
-[ext_resource type="Texture2D" uid="uid://ch2c0uus03qn6" path="res://assets/textures/godot_logo.png" id="1_wpo6x"]
 [ext_resource type="PackedScene" uid="uid://c4oy6yui5ffhj" path="res://screens/play_menu/play_menu_scene.tscn" id="2_jjnch"]
-[ext_resource type="Script" uid="uid://buy4c3xhcnogx" path="res://screens/game/twirl.gd" id="2_uald8"]
 
-[node name="GameScene" type="Node2D"]
+[node name="GameScene" type="Node3D" unique_id=1766889845]
 script = ExtResource("1_e6mtp")
 play_menu = ExtResource("2_jjnch")
+current_level = "uid://dvx67ojti6q7j"
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(587, 308)
-scale = Vector2(0.146484, 0.146484)
-texture = ExtResource("1_wpo6x")
-script = ExtResource("2_uald8")
-rate = 1.0
-
-[node name="InterfaceLayer" type="CanvasLayer" parent="."]
+[node name="InterfaceLayer" type="CanvasLayer" parent="." unique_id=2074218043]
 unique_name_in_owner = true

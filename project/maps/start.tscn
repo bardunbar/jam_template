@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://dvx67ojti6q7j"]
+
+[ext_resource type="PackedScene" uid="uid://jx8y4e7s2rcw" path="res://actors/player.tscn" id="1_i78p4"]
+[ext_resource type="Script" uid="uid://ccjmnp3vmyque" path="res://maps/level.gd" id="1_txpt3"]
+[ext_resource type="Shader" uid="uid://d25c04d2txjvg" path="res://shaders/wall.gdshader" id="2_u2sb3"]
+[ext_resource type="Material" uid="uid://t8cgs41roevu" path="res://material/ground.tres" id="2_vhhta"]
+[ext_resource type="Material" uid="uid://cmtd0625turjo" path="res://material/world_wall.tres" id="4_adovl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vhhta"]
+render_priority = 0
+shader = ExtResource("2_u2sb3")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_adovl"]
+render_priority = 0
+shader = ExtResource("2_u2sb3")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_i78p4"]
+
+[sub_resource type="Sky" id="Sky_qsust"]
+sky_material = SubResource("ProceduralSkyMaterial_i78p4")
+
+[sub_resource type="Environment" id="Environment_txpt3"]
+background_mode = 2
+sky = SubResource("Sky_qsust")
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_txpt3"]
+plane = Plane(0, 0, 1, 0)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_u2sb3"]
+plane = Plane(0, 0, -1, 0)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_mjb1c"]
+plane = Plane(-1, 0, 0, 0)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_vhhta"]
+plane = Plane(1, 0, 0, 0)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qsust"]
+
+[node name="Start" type="Node3D" unique_id=1179037300]
+script = ExtResource("1_txpt3")
+
+[node name="Node3D" type="Node3D" parent="." unique_id=1033159030]
+
+[node name="Floor" type="CSGBox3D" parent="Node3D" unique_id=361145357]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+size = Vector3(100, 0.01, 100)
+material = ExtResource("2_vhhta")
+
+[node name="NorthWall" type="CSGBox3D" parent="Node3D" unique_id=1425309253]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.9, 50)
+size = Vector3(100, 20, 0.1)
+material = ExtResource("4_adovl")
+
+[node name="SouthWall" type="CSGBox3D" parent="Node3D" unique_id=800905331]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.9, -50)
+size = Vector3(100, 20, 0.1)
+material = ExtResource("4_adovl")
+
+[node name="EastWall" type="CSGBox3D" parent="Node3D" unique_id=830447138]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 9.9, 0)
+size = Vector3(0.1, 20, 100)
+material = ExtResource("4_adovl")
+
+[node name="WestWall" type="CSGBox3D" parent="Node3D" unique_id=1831274788]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 9.9, 0)
+size = Vector3(0.1, 20, 100)
+material = ExtResource("4_adovl")
+
+[node name="Wall" type="CSGBox3D" parent="Node3D" unique_id=1300722828]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 0)
+use_collision = true
+size = Vector3(0.25, 1, 10)
+material = SubResource("ShaderMaterial_vhhta")
+
+[node name="Wall2" type="CSGBox3D" parent="Node3D" unique_id=2108770011]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, 0)
+use_collision = true
+size = Vector3(0.25, 1, 10)
+material = SubResource("ShaderMaterial_adovl")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D" unique_id=1895710356]
+environment = SubResource("Environment_txpt3")
+
+[node name="Player" parent="." unique_id=96067196 instance=ExtResource("1_i78p4")]
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=819784181]
+transform = Transform3D(0.8660254, -0.35355338, -0.3535534, 0.49999997, 0.61237246, 0.6123725, 0, -0.7071068, 0.70710677, 0, 15, 0)
+metadata/_edit_lock_ = true
+
+[node name="Bounds" type="StaticBody3D" parent="." unique_id=120334072]
+metadata/_edit_lock_ = true
+
+[node name="North" type="CollisionShape3D" parent="Bounds" unique_id=167206811]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -49)
+shape = SubResource("WorldBoundaryShape3D_txpt3")
+
+[node name="South" type="CollisionShape3D" parent="Bounds" unique_id=188999660]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 50)
+shape = SubResource("WorldBoundaryShape3D_u2sb3")
+
+[node name="East" type="CollisionShape3D" parent="Bounds" unique_id=139920218]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_mjb1c")
+
+[node name="West" type="CollisionShape3D" parent="Bounds" unique_id=1921786351]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_vhhta")
+
+[node name="Floor" type="CollisionShape3D" parent="Bounds" unique_id=205600929]
+shape = SubResource("WorldBoundaryShape3D_qsust")
